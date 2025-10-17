@@ -1,35 +1,49 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))] // Removed GridPosition requirement
 public class PlayerManager : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Speed of player movement
+    public float moveSpeed = 5f;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
+    // Singleton pattern for easy access
+    public static PlayerManager Instance { get; private set; }
+
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
+        if (Instance != null && Instance != this)
         {
-            Debug.LogError("PlayerManager requires a Rigidbody2D component on the GameObject.");
-            enabled = false; // Disable the script if Rigidbody2D is missing
+            Destroy(gameObject);
+            return;
         }
+        Instance = this;
+
+        rb = GetComponent<Rigidbody2D>();
+        // gridPosition = GetComponent<GridPosition>(); // Removed
+
+        if (rb == null) Debug.LogError("PlayerManager requires Rigidbody2D.");
+        // if (gridPosition == null) Debug.LogError("PlayerManager requires GridPosition."); // Removed
     }
 
     void Update()
     {
-        // Get input from WASD keys
-        moveInput.x = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right arrow keys
-        moveInput.y = Input.GetAxisRaw("Vertical");   // W/S or Up/Down arrow keys
-
-        // Normalize the input to prevent faster diagonal movement
+        moveInput.x = Input.GetAxisRaw("Horizontal");
+        moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput.Normalize();
+
+        // No GridPosition updates needed here if GridPosition is removed for selection.
+        // If you keep GridPosition for other reasons, you would update it here.
     }
 
     void FixedUpdate()
     {
-        // Apply velocity to the Rigidbody2D
-        rb.linearVelocity = moveInput * moveSpeed;
+        if (rb != null)
+        {
+            rb.linearVelocity = moveInput * moveSpeed;
+        }
     }
+
+    // Removed GetCurrentGridPosition if GridPosition is removed entirely.
 }

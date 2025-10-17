@@ -1,61 +1,16 @@
 using UnityEngine;
 
-// Add a requirement for Collider2D, as it's needed for raycasting.
-[RequireComponent(typeof(Collider2D), typeof(SpriteRenderer))]
+[RequireComponent(typeof(Collider2D), typeof(SpriteRenderer))] // Removed GridPosition requirement
 public class Selectable : MonoBehaviour
 {
     public bool IsSelected { get; private set; } = false;
-    public Material highlightMaterial; // Assign your highlight material in the inspector
+    public Material highlightMaterial; // Assign your highlight material
 
     private Material originalMaterial;
     private SpriteRenderer spriteRenderer;
+    // private GridPosition gridPosition; // Removed
 
-    void Awake()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-        {
-            // Store the initial material. It's best to use sharedMaterial for efficiency
-            // if multiple objects use the same base material, but for simplicity
-            // and allowing individual modification (like disabling a renderer), .material is okay.
-            originalMaterial = spriteRenderer.material;
-        }
-
-        // If no highlight material is assigned, try to get the default from SelectionManager if it exists.
-        if (highlightMaterial == null)
-        {
-            if (SelectionManager.Instance != null)
-            {
-                highlightMaterial = SelectionManager.Instance.defaultHighlightMaterial;
-            }
-            if (highlightMaterial == null)
-            {
-                Debug.LogWarning($"Highlight material not assigned for {gameObject.name} and no default found. Highlighting may not work.");
-            }
-        }
-
-        // Register this selectable with the SelectionManager
-        SelectionManager.Instance?.RegisterSelectable(this);
-    }
-
-    void OnEnable()
-    {
-        // Ensure registration happens if the object is enabled after being disabled.
-        SelectionManager.Instance?.RegisterSelectable(this);
-    }
-
-    void OnDisable()
-    {
-        // Unregister when the object is disabled or destroyed.
-        SelectionManager.Instance?.UnregisterSelectable(this);
-    }
-
-    void OnDestroy()
-    {
-        // Ensure unregistration happens when the object is destroyed.
-        SelectionManager.Instance?.UnregisterSelectable(this);
-    }
-
+    // --- Methods to manage selection state and visual highlight ---
     public void SetSelected(bool selected)
     {
         IsSelected = selected;
@@ -72,18 +27,54 @@ public class Selectable : MonoBehaviour
         }
         else
         {
-            // If not selected, revert to original material.
-            spriteRenderer.material = originalMaterial;
+            spriteRenderer.material = originalMaterial; // Revert to original material
         }
     }
 
-    // Optional: methods called by SelectionManager when selection state changes
-    public void OnSelectionStart()
+    // --- Unity Lifecycle & Registration ---
+    void Awake()
     {
-        // Debug.Log($"{gameObject.name} started selection");
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        // gridPosition = GetComponent<GridPosition>(); // Removed
+
+        if (spriteRenderer == null) Debug.LogError($"Selectable requires a SpriteRenderer on {gameObject.name}.");
+        // if (gridPosition == null) Debug.LogError($"Selectable requires a GridPosition on {gameObject.name}."); // Removed
+
+        if (spriteRenderer != null)
+        {
+            originalMaterial = spriteRenderer.material; // Store initial material
+        }
+
+        // Attempt to get a highlight material, falling back to a default if available.
+        if (highlightMaterial == null && SelectionManager.Instance != null)
+        {
+            highlightMaterial = SelectionManager.Instance.defaultHighlightMaterial;
+        }
+        if (highlightMaterial == null)
+        {
+            Debug.LogWarning($"Highlight material not assigned for {gameObject.name} and no default found.");
+        }
+
+        // Register with the SelectionManager when this object becomes active.
+        SelectionManager.Instance?.RegisterSelectable(this);
     }
-    public void OnSelectionEnd()
+
+    void OnEnable()
     {
-        // Debug.Log($"{gameObject.name} ended selection");
+        SelectionManager.Instance?.RegisterSelectable(this);
     }
+
+    void OnDisable()
+    {
+        SelectionManager.Instance?.UnregisterSelectable(this);
+    }
+
+    void OnDestroy()
+    {
+        SelectionManager.Instance?.UnregisterSelectable(this);
+    }
+
+    // --- Optional: Custom selection start/end logic ---
+    public void OnSelectionStart() { /* Debug.Log($"{gameObject.name} started selection"); */ }
+    public void OnSelectionEnd() { /* Debug.Log($"{gameObject.name} ended selection"); */ }
 }

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48068f9a9f76c7a44a3574db022b15a8, type: 3}
+  m_Name: RosePlant_Data
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantName: Rose
+  seedSprite: {fileID: 1766493998, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
+  stages:
+  - stage: 2
+    stageSprite: {fileID: 1766493998, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
+    wateredSprite: {fileID: -1455404957, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
+    requiresWatering: 1
+    stageDuration: 10
+    nextStageAuto: 3
+    nextStageOnWater: 4
+    nextStageOnPlayerAction: 4
+    actionToPlantSeed: 
+    actionToWater: 
+    actionToHarvest: 
+    actionToTillSoil: 
+    wateringCooldown: 0
+  - stage: 3
+    stageSprite: {fileID: -189514963, guid: 2eeb0d4ef0ea64144bad937acfc24d59, type: 3}
+    wateredSprite: {fileID: 1950398061, guid: 2eeb0d4ef0ea64144bad937acfc24d59, type: 3}
+    requiresWatering: 1
+    stageDuration: 10
+    nextStageAuto: 5
+    nextStageOnWater: 6
+    nextStageOnPlayerAction: 6
+    actionToPlantSeed: 
+    actionToWater: 
+    actionToHarvest: 
+    actionToTillSoil: 
+    wateringCooldown: 0

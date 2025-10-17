@@ -1,56 +1,90 @@
+
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq; // Needed for OrderBy
+using System.Linq;
 
 public class PlayerActions : MonoBehaviour
 {
-    // List of all possible actions the player can perform with their staff.
-    // These should be ScriptableObject assets you create.
-    public List<StaffAction> availableActions;
+	public List<StaffAction> availableActions; // Drag ALL your StaffAction assets here.
 
-    void Start()
-    {
-        // Optional: Ensure actions are sorted by priority if needed, or by target tag.
-        // For example, if you want "Cut Grass" to be tried before "Water Soil" on a grass object
-        // that could potentially be a seed later, you might sort.
-        // For now, we'll just iterate.
-    }
+	void Start()
+	{
+		// Check if GenericActionExecutor is present.
+		if (FindObjectOfType<GenericActionExecutor>() == null)
+		{
+			Debug.LogError("PlayerActions requires a GenericActionExecutor to be present in the scene!");
+		}
+	}
 
-    // This method is called by SelectionManager when the mouse clicks on a selected object.
-    public void AttemptAction(Selectable targetSelectable)
-    {
-        if (targetSelectable == null)
-        {
-            Debug.LogWarning("AttemptAction called with null target.");
-            return;
-        }
+	public void AttemptAction(Selectable targetSelectable)
+	{
+		if (targetSelectable == null)
+		{
+			Debug.LogWarning("AttemptAction called with null target.");
+			return;
+		}
 
-        GameObject targetGameObject = targetSelectable.gameObject;
-        string targetTag = targetGameObject.tag;
+		GameObject targetGameObject = targetSelectable.gameObject;
+		string targetTag = targetGameObject.tag;
 
-        // Sort actions to prioritize certain ones if they have the same targetTag
-        // For example, if you have a "Grass" tag, and you want "CutGrassAction" to be
-        // prioritized over a "PlantSeedAction" if somehow both were applicable.
-        // For now, a simple iteration is fine if your tags are distinct enough.
+		// Find the StaffAction asset that best matches the target's tag and sprite.
+		StaffAction matchingAction = FindBestMatchingAction(targetTag, targetSelectable.GetComponent<SpriteRenderer>()?.sprite);
 
-        // Find the FIRST action in the list that matches the target's tag.
-        StaffAction matchingAction = availableActions.FirstOrDefault(action => action.targetTag == targetTag);
+		// --- CORRECTED CALL ---
+		if (matchingAction != null)
+		{
+			GenericActionExecutor executor = FindObjectOfType<GenericActionExecutor>();
+			if (executor != null)
+			{
+				// CALL THE CORRECT PUBLIC METHOD: ExecuteAction expects the 'Selectable'
+				// The executor itself will then find the right StaffAction asset and apply effects.
+				executor.ExecuteAction(targetSelectable);
+			}
+			else
+			{
+				Debug.LogError("GenericActionExecutor not found in scene when attempting to perform action!");
+			}
+		}
+		else
+		{
+			Debug.Log($"No suitable StaffAction found in availableActions for target with tag: {targetTag}");
+			if (SelectionManager.Instance != null)
+			{
+				SelectionManager.Instance.DeselectCurrentHoveredObject();
+			}
+		}
+	}
 
-        if (matchingAction != null)
-        {
-            // Perform the action
-            matchingAction.PerformAction(targetGameObject, this.gameObject); // Pass target and player GameObject
+	// Helper to find the best matching action from the PlayerActions' list.
+	// This logic is similar to what was in GenericActionExecutor before,
+	// but now it's here to provide the *correct* matching action to the executor.
+	private StaffAction FindBestMatchingAction(string targetTag, Sprite currentTargetSprite)
+	{
+		StaffAction bestMatch = null;
 
-            // After performing an action, you might want to deselect the object.
-            // This depends on your game's flow. For example, if harvesting an item, you might keep it selected
-            // to potentially pick it up. If tilling, you might deselect.
-            SelectionManager.Instance.DeselectCurrentHoveredObject();
-        }
-        else
-        {
-            Debug.Log($"No suitable action found in availableActions for target with tag: {targetTag}");
-            // Optionally, if no action is found, you might deselect or perform a default action.
-            SelectionManager.Instance.DeselectCurrentHoveredObject();
-        }
-    }
+		bestMatch = availableActions.FirstOrDefault(action =>
+			action != null &&
+			!string.IsNullOrEmpty(action.targetTag) && action.targetTag == targetTag &&
+			action.targetSprite != null && currentTargetSprite != null && action.targetSprite == currentTargetSprite
+		);
+
+		if (bestMatch == null)
+		{
+			bestMatch = availableActions.FirstOrDefault(action =>
+				action != null &&
+				!string.IsNullOrEmpty(action.targetTag) && action.targetTag == targetTag &&
+				action.targetSprite == null
+			);
+		}
+
+		if (bestMatch == null && currentTargetSprite != null)
+		{
+			bestMatch = availableActions.FirstOrDefault(action =>
+				action != null &&
+				string.IsNullOrEmpty(action.targetTag) &&
+				action.targetSprite != null && action.targetSprite == currentTargetSprite
+			);
+		}
+		return bestMatch;
+	}
 }
