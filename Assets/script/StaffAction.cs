@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq; // Included here in case it's needed by StaffAction itself later, though not strictly for its definition.
 
+// Enum to define different types of effects an action can have.
+// Make this public so other scripts can use it.
+[System.Serializable] // Essential for structs used in lists that appear in the inspector
 public enum ActionEffectType
 {
     None,
@@ -10,11 +14,12 @@ public enum ActionEffectType
     PlayTargetAnimation,
     PlaySound,
     ApplyStatusEffect,
-    CallComponentMethod, // Useful for complex custom logic NOT handled directly here.
-    // NEW: Player Action Trigger - this effect signals the InteractiveTile to use a specific action.
-    TriggerInteractiveTileAction
+    CallComponentMethod,
+    TriggerInteractiveTileAction // This effect type is used to signal a direct call to InteractiveTile's methods.
 }
 
+// Serializable class to hold the data for a single effect within an action.
+// Make this public and serializable so it can be accessed and displayed.
 [System.Serializable]
 public class ActionEffect
 {
@@ -35,23 +40,31 @@ public class ActionEffect
     public string componentMethodCall; // e.g., "SeedComponent.StartGrowth"
 
     [Header("Interactive Tile Action Trigger")]
-    [Tooltip("Specify the player action name (e.g., 'Water', 'Plant Seed') to trigger on an InteractiveTile.")]
-    public string interactiveActionName; // Name of the action to pass to InteractiveTile.Interact()
+    [Tooltip("Specify the action name to pass to InteractiveTile.Interact() for this specific effect.")]
+    public string interactiveActionName; // e.g., "Water", "Harvest", "Till Soil", "Plant Seed"
+
+    // *** Important Note on Passing PlantData for Planting ***
+    // If an effect needs to pass specific data like PlantData,
+    // you'd need to add a field here, e.g., public PlantData plantDataToPass;
+    // For now, we'll have PlayerActions detect the "Plant Seed" action and pass it.
 }
 
+// ScriptableObject defining a single staff action.
 [CreateAssetMenu(fileName = "NewStaffAction", menuName = "YourGame/StaffActions/GenericAction")]
 public class StaffAction : ScriptableObject
 {
     [Header("General Action Info")]
-    public string actionName = "New Action"; // e.g., "Cut Grass", "Water", "Plant Seed"
+    public string actionName = "New Action";
     public Sprite actionIcon;
 
     [Header("Targeting")]
     public string targetTag;
     public Sprite targetSprite;
 
+    [Header("Seed Planting Specific")]
+    [Tooltip("If this action is 'Plant Seed', assign the PlantData asset for the seed being planted.")]
+    public PlantData seedToPlantData; // This is used by PlayerActions to pass data.
+
     [Header("Effects List")]
     public List<ActionEffect> effects = new List<ActionEffect>();
-
-    // Add common properties like mana cost, cooldown, etc., if needed.
 }

@@ -10,24 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cca4f913e6170442bc0284379b0c575, type: 3}
-  m_Name: SeedSoil_ActionAsset
+  m_Name: PlantRoseSeed_ActionAsset
   m_EditorClassIdentifier: Assembly-CSharp::StaffAction
-  actionName: Turn EmptySoil to Soil
+  actionName: Plant Seed
   actionIcon: {fileID: 0}
-  targetTag: EmptySoil
+  targetTag: SoilEmpty
   targetSprite: {fileID: 1729582992, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
+  seedToPlantData: {fileID: 11400000, guid: 5928c117a1308464eae6a5ae1e4e1beb, type: 2}
   effects:
   - type: 1
     resultSprite: {fileID: 1766493998, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
-    resultTag: Soil
+    resultTag: 
     playerAnimation: {fileID: 0}
     targetAnimation: {fileID: 0}
     sound: {fileID: 0}
     componentMethodCall: 
+    interactiveActionName: 
   - type: 2
     resultSprite: {fileID: 1766493998, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
-    resultTag: Soil
+    resultTag: Soil_Seeded
     playerAnimation: {fileID: 0}
     targetAnimation: {fileID: 0}
     sound: {fileID: 0}
     componentMethodCall: 
+    interactiveActionName: 

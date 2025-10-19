@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StaffAction
   actionName: Turn Soil to SoilWatered
   actionIcon: {fileID: 0}
-  targetTag: Soil
+  targetTag: SoilWatered
   targetSprite: {fileID: 1766493998, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
+  seedToPlantData: {fileID: 0}
   effects:
   - type: 1
     resultSprite: {fileID: -1455404957, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
@@ -24,6 +25,7 @@ MonoBehaviour:
     targetAnimation: {fileID: 0}
     sound: {fileID: 0}
     componentMethodCall: 
+    interactiveActionName: 
   - type: 2
     resultSprite: {fileID: -1455404957, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
     resultTag: SoilWatered
@@ -31,3 +33,4 @@ MonoBehaviour:
     targetAnimation: {fileID: 0}
     sound: {fileID: 0}
     componentMethodCall: 
+    interactiveActionName: 

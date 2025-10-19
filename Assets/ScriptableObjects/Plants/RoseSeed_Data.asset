@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48068f9a9f76c7a44a3574db022b15a8, type: 3}
-  m_Name: RosePlant_Data
+  m_Name: RoseSeed_Data
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
-  plantName: Rose
+  plantName: Rose Seed
   seedSprite: {fileID: 1766493998, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
   stages:
   - stage: 2
@@ -21,23 +21,23 @@ MonoBehaviour:
     requiresWatering: 1
     stageDuration: 10
     nextStageAuto: 3
-    nextStageOnWater: 4
+    nextStageOnWater: 3
     nextStageOnPlayerAction: 4
     actionToPlantSeed: 
-    actionToWater: 
+    actionToWater: Water
     actionToHarvest: 
     actionToTillSoil: 
-    wateringCooldown: 0
+    wateringCooldown: 5
   - stage: 3
     stageSprite: {fileID: -189514963, guid: 2eeb0d4ef0ea64144bad937acfc24d59, type: 3}
     wateredSprite: {fileID: 1950398061, guid: 2eeb0d4ef0ea64144bad937acfc24d59, type: 3}
     requiresWatering: 1
     stageDuration: 10
     nextStageAuto: 5
-    nextStageOnWater: 6
+    nextStageOnWater: 5
     nextStageOnPlayerAction: 6
     actionToPlantSeed: 
-    actionToWater: 
+    actionToWater: Water
     actionToHarvest: 
     actionToTillSoil: 
-    wateringCooldown: 0
+    wateringCooldown: 5

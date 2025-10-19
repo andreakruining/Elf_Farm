@@ -10,24 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cca4f913e6170442bc0284379b0c575, type: 3}
-  m_Name: CutGrass_ActionAsset
+  m_Name: TIllSoil_ActionAsset
   m_EditorClassIdentifier: Assembly-CSharp::StaffAction
-  actionName: Cut Grass
+  actionName: Till Soil
   actionIcon: {fileID: 0}
   targetTag: Grass
   targetSprite: {fileID: 757673267046442471, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
+  seedToPlantData: {fileID: 0}
   effects:
   - type: 1
     resultSprite: {fileID: 1729582992, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
-    resultTag: EmptySoil
+    resultTag: SoilEmpty
     playerAnimation: {fileID: 0}
     targetAnimation: {fileID: 0}
     sound: {fileID: 0}
     componentMethodCall: 
+    interactiveActionName: 
   - type: 2
     resultSprite: {fileID: 1729582992, guid: fcc29fc5a30970149b86a077824e2217, type: 3}
-    resultTag: EmptySoil
+    resultTag: SoilEmpty
     playerAnimation: {fileID: 0}
     targetAnimation: {fileID: 0}
     sound: {fileID: 0}
     componentMethodCall: 
+    interactiveActionName: 
